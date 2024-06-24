@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            color: #fff;
+        }
+
+        h1 {
+            color: #ffc107;
+        }
+
+        .container {
+            background: #343a40;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        input {
+            padding: 10px;
+            margin: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            width: 150px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            color: #fff;
+            transition: background-color 0.3s;
+        }
+
+        .btn-add { background-color: #28a745; }
+        .btn-subtract { background-color: #dc3545; }
+        .btn-multiply { background-color: #007bff; }
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-size: 20px;
+            color: #ffc107;
+        }
+    </style>
+    <script>
+        async function performOperation(operation) {
+            const operand1 = parseInt(document.getElementById('operand1').value);
+            const operand2 = parseInt(document.getElementById('operand2').value);
+            const response = await fetch(`http://localhost:8080/${operation}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ operand1, operand2 })
+            });
+            const result = await response.json();
+            document.getElementById('result').innerText = `Result: ${result.result}`;
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Go Calculator</h1>
+        <input type="number" id="operand1" placeholder="Operand 1">
+        <input type="number" id="operand2" placeholder="Operand 2">
+        <br><br>
+        <button class="btn btn-add" onclick="performOperation('add')">Add</button>
+        <button class="btn btn-subtract" onclick="performOperation('subtract')">Subtract</button>
+        <button class="btn btn-multiply" onclick="performOperation('multiply')">Multiply</button>
+        <br><br>
+        <div id="result" class="result">Result: </div>
+    </div>
+</body>
+</html>
